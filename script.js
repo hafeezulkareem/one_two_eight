@@ -7,8 +7,10 @@ const getRandomInt = (min, max) =>
 
 const getRandomStartTile = () => (getRandomInt(0, 2) === 0 ? 2 : 4);
 
-const getInitialState = () => {
-   return {
+let state;
+
+const initState = () => {
+   state = {
       state: "PLAYING",
       board: [
          [null, null, null],
@@ -17,8 +19,6 @@ const getInitialState = () => {
       ],
    };
 };
-
-const state = getInitialState();
 
 const addInitialTiles = () => {
    const firstTile = getRandomStartTile();
@@ -78,6 +78,10 @@ const addClassesToTile = (tile, number) => {
 const updateUI = () => {
    const gameBoard = qs("#gameBoard");
 
+   while (gameBoard.firstChild) {
+      gameBoard.removeChild(gameBoard.firstChild);
+   }
+
    const { board } = state;
    board.forEach((row) => {
       row.forEach((number) => {
@@ -89,7 +93,47 @@ const updateUI = () => {
    });
 };
 
+const mergeLeft = () => {};
+
+const mergeTop = () => {};
+
+const mergeRight = () => {};
+
+const mergeBottom = () => {};
+
+const mergeTiles = (event) => {
+   switch (event.keyCode) {
+      case 37:
+         mergeLeft();
+         updateUI();
+         break;
+      case 38:
+         mergeTop();
+         updateUI();
+         break;
+      case 39:
+         mergeRight();
+         updateUI();
+         break;
+      case 40:
+         mergeBottom();
+         updateUI();
+         break;
+      default:
+         break;
+   }
+};
+
+const addEvents = () => {
+   window.addEventListener("keydown", mergeTiles);
+
+   const newGameButton = qs("#newGameButton");
+   newGameButton.addEventListener("click", startGame);
+};
+
 const startGame = () => {
+   initState();
+   addEvents();
    addInitialTiles();
    updateUI();
 };
