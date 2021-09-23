@@ -205,23 +205,41 @@ const mergeBottom = (board) => {
    }
 };
 
+const addANewTile = (board) => {
+   const tile = getRandomStartTile();
+
+   let row = getRandomInt(0, 3);
+   let col = getRandomInt(0, 3);
+
+   while (board[row][col] !== null) {
+      row = getRandomInt(0, 3);
+      col = getRandomInt(0, 3);
+   }
+
+   board[row][col] = tile;
+};
+
 const mergeTiles = (event) => {
    const { board } = state;
    switch (event.keyCode) {
       case 37:
          mergeLeft(board);
+         addANewTile(board);
          updateUI();
          break;
       case 38:
          mergeTop(board);
+         addANewTile(board);
          updateUI();
          break;
       case 39:
          mergeRight(board);
+         addANewTile(board);
          updateUI();
          break;
       case 40:
          mergeBottom(board);
+         addANewTile(board);
          updateUI();
          break;
       default:
