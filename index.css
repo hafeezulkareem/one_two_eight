@@ -83,6 +83,47 @@
    align-items: center;
    border-radius: 2px;
    background-color: #cdc1b4;
-   font-size: 48px;
+   font-size: 32px;
    font-weight: bold;
+   padding: 8px;
+}
+
+.tile.two {
+   background-color: #eee4da;
+   color: #776e65;
+}
+
+.tile.four {
+   background-color: #eee1c9;
+   color: #776e65;
+}
+
+.tile.eight {
+   background-color: #f3b27a;
+   color: #ffffff;
+}
+
+.tile.sixteen {
+   background-color: #f69664;
+   color: #ffffff;
+}
+
+.tile.thirty-two {
+   background-color: #f77c5f;
+   color: #ffffff;
+}
+
+.tile.sixty-four {
+   background-color: #f75f3b;
+   color: #ffffff;
+}
+
+.tile.one-twenty-eight {
+   background-color: #edc53f;
+   color: #ffffff;
+}
+
+.tile.extra {
+   background-color: #edc22e;
+   color: #ffffff;
 }
