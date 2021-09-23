@@ -93,30 +93,135 @@ const updateUI = () => {
    });
 };
 
-const mergeLeft = () => {};
+const mergeLeft = (board) => {
+   for (let i = 0; i < 3; i++) {
+      for (let j = 2; j > 0; j--) {
+         let k = j - 1;
+         while (k >= 0 && board[i][k] === null) {
+            k -= 1;
+         }
+         if (k >= 0 && board[i][j] === board[i][k]) {
+            board[i][k] += board[i][j];
+            board[i][j] = null;
+         }
+         if (k === -1) {
+            board[i][0] = board[i][j];
+            board[i][j] = null;
+         } else if (board[i][k + 1] === null) {
+            board[i][k + 1] = board[i][j];
+            board[i][j] = null;
+         }
+         k += 2;
+         while (k < 2 && board[i][k] === null) {
+            board[i][k] = board[i][k + 1];
+            board[i][k + 1] = null;
+            k += 1;
+         }
+      }
+   }
+};
 
-const mergeTop = () => {};
+const mergeTop = (board) => {
+   for (let i = 2; i > 0; i--) {
+      for (let j = 0; j < 3; j++) {
+         let k = i - 1;
+         while (k >= 0 && board[k][j] === null) {
+            k -= 1;
+         }
+         if (k >= 0 && board[i][j] === board[k][j]) {
+            board[k][j] += board[i][j];
+            board[i][j] = null;
+         }
+         if (k === -1) {
+            board[0][j] = board[i][j];
+            board[i][j] = null;
+         } else if (board[k + 1][j] === null) {
+            board[k + 1][j] = board[i][j];
+            board[i][j] = null;
+         }
+         k += 2;
+         while (k < 2 && board[k][j] === null) {
+            board[k][j] = board[k + 1][j];
+            board[k + 1][j] = null;
+            k += 1;
+         }
+      }
+   }
+};
 
-const mergeRight = () => {};
+const mergeRight = (board) => {
+   for (let i = 0; i < 3; i++) {
+      for (let j = 0; j < 2; j++) {
+         let k = j + 1;
+         while (k <= 2 && board[i][k] === null) {
+            k += 1;
+         }
+         if (k <= 2 && board[i][j] === board[i][k]) {
+            board[i][k] += board[i][j];
+            board[i][j] = null;
+         }
+         if (k === 3) {
+            board[i][2] = board[i][j];
+            board[i][j] = null;
+         } else if (board[i][k - 1] === null) {
+            board[i][k - 1] = board[i][j];
+            board[i][j] = null;
+         }
+         k -= 2;
+         while (k > 0 && board[i][k] === null) {
+            board[i][k] = board[i][k - 1];
+            board[i][k - 1] = null;
+            k -= 1;
+         }
+      }
+   }
+};
 
-const mergeBottom = () => {};
+const mergeBottom = (board) => {
+   for (let i = 0; i < 2; i++) {
+      for (let j = 0; j < 3; j++) {
+         let k = i + 1;
+         while (k <= 2 && board[k][j] === null) {
+            k += 1;
+         }
+         if (k <= 2 && board[i][j] === board[k][j]) {
+            board[k][j] += board[i][j];
+            board[i][j] = null;
+         }
+         if (k === 3) {
+            board[2][j] = board[i][j];
+            board[i][j] = null;
+         } else if (board[k - 1][j] === null) {
+            board[k - 1][j] = board[i][j];
+            board[i][j] = null;
+         }
+         k -= 2;
+         while (k > 0 && board[k][j] === null) {
+            board[k][j] = board[k - 1][j];
+            board[k - 1][j] = null;
+            k -= 1;
+         }
+      }
+   }
+};
 
 const mergeTiles = (event) => {
+   const { board } = state;
    switch (event.keyCode) {
       case 37:
-         mergeLeft();
+         mergeLeft(board);
          updateUI();
          break;
       case 38:
-         mergeTop();
+         mergeTop(board);
          updateUI();
          break;
       case 39:
-         mergeRight();
+         mergeRight(board);
          updateUI();
          break;
       case 40:
-         mergeBottom();
+         mergeBottom(board);
          updateUI();
          break;
       default:
