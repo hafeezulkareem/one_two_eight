@@ -71,7 +71,7 @@ button {
 }
 
 .game-area {
-   width: 356px;
+   width: 281px;
    background-color: #bbada0;
    border-radius: 4px;
    padding: 16px;
@@ -85,8 +85,8 @@ button {
 }
 
 .tile {
-   width: 100px;
-   height: 100px;
+   width: 75px;
+   height: 75px;
    display: flex;
    justify-content: center;
    align-items: center;
@@ -95,6 +95,16 @@ button {
    font-size: 32px;
    font-weight: bold;
    padding: 8px;
+}
+
+@media (min-width: 760px) {
+   .game-area {
+      width: 356px;
+   }
+   .tile {
+      width: 100px;
+      height: 100px;
+   }
 }
 
 .winning-container,
