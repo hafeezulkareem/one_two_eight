@@ -17,6 +17,8 @@ const initState = () => {
          [null, null, null],
          [null, null, null],
       ],
+      score: 0,
+      bestScore: 0,
    };
 };
 
@@ -85,6 +87,19 @@ const updateLosingContainerDisplay = (display) => {
    losingContainer.style.display = display;
 };
 
+const updateCurrentScore = () => {
+   const scoreElement = qs("#score");
+   scoreElement.innerHTML = state.score;
+};
+
+const updateBestScore = () => {
+   if (state.score > state.bestScore) {
+      state.bestScore = state.score;
+   }
+   const bestScoreElement = qs("#bestScore");
+   bestScoreElement.innerHTML = state.bestScore;
+};
+
 const updateUI = () => {
    const gameBoard = qs("#gameBoard");
 
@@ -101,6 +116,8 @@ const updateUI = () => {
          gameBoard.appendChild(tile);
       });
    });
+
+   updateCurrentScore();
 
    if (state.status === "WON") {
       updateWinningContainerDisplay("flex");
@@ -123,8 +140,8 @@ const mergeLeft = (board) => {
          }
          if (k >= 0 && board[i][k] === board[i][j]) {
             board[i][k] += board[i][j];
+            state.score += board[i][k];
             board[i][j] = null;
-            merge = true;
          }
          if (k === -1) {
             board[i][0] = board[i][j];
@@ -155,6 +172,7 @@ const mergeTop = (board) => {
          }
          if (k >= 0 && board[k][j] === board[i][j]) {
             board[k][j] += board[i][j];
+            state.score += board[k][j];
             board[i][j] = null;
          }
          if (k === -1) {
@@ -186,8 +204,8 @@ const mergeRight = (board) => {
          }
          if (k <= 2 && board[i][k] === board[i][j]) {
             board[i][k] += board[i][j];
+            state.score += board[i][k];
             board[i][j] = null;
-            merge = true;
          }
          if (k === 3) {
             board[i][2] = board[i][j];
@@ -218,6 +236,7 @@ const mergeBottom = (board) => {
          }
          if (k <= 2 && board[k][j] === board[i][j]) {
             board[k][j] += board[i][j];
+            state.score += board[k][j];
             board[i][j] = null;
          }
          if (k === 3) {
@@ -341,6 +360,7 @@ const checkForLosingCondition = (board) => {
    }
    if (lost) {
       state.status = "LOST";
+      updateBestScore();
    }
 };
 
