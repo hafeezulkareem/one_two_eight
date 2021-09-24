@@ -11,7 +11,7 @@ let state;
 
 const initState = () => {
    state = {
-      state: "PLAYING",
+      status: "PLAYING",
       board: [
          [null, null, null],
          [null, null, null],
@@ -75,6 +75,16 @@ const addClassesToTile = (tile, number) => {
    }
 };
 
+const updateWinningContainerDisplay = (display) => {
+   const winningContainer = qs("#winningContainer");
+   winningContainer.style.display = display;
+};
+
+const updateLosingContainerDisplay = (display) => {
+   const losingContainer = qs("#losingContainer");
+   losingContainer.style.display = display;
+};
+
 const updateUI = () => {
    const gameBoard = qs("#gameBoard");
 
@@ -91,6 +101,14 @@ const updateUI = () => {
          gameBoard.appendChild(tile);
       });
    });
+
+   if (state.status === "WON") {
+      updateWinningContainerDisplay("flex");
+   }
+
+   if (state.status === "LOST") {
+      updateLosingContainerDisplay("flex");
+   }
 };
 
 const mergeLeft = (board) => {
@@ -233,31 +251,130 @@ const addANewTile = (board) => {
    board[row][col] = tile;
 };
 
+const checkForWinningCondition = (board) => {
+   let won = false;
+   for (let i = 0; i < 3; i++) {
+      for (let j = 0; j < 3; j++) {
+         if (board[i][j] === 128) {
+            won = true;
+            break;
+         }
+      }
+      if (won) {
+         break;
+      }
+   }
+   if (won) {
+      state.status = "WON";
+   }
+};
+
+const checkForLosingCondition = (board) => {
+   let lost = true;
+   for (let i = 0; i < 3; i++) {
+      for (let j = 0; j < 3; j++) {
+         if (board[i][j] === null) {
+            lost = false;
+            break;
+         }
+         if (i === 0) {
+            if (board[i][j] === board[i + 1][j]) {
+               lost = false;
+               break;
+            }
+            if (j + 1 <= 2 && board[i][j] === board[i][j + 1]) {
+               lost = false;
+               break;
+            }
+            if (j - 1 >= 0 && board[i][j] === board[i][j - 1]) {
+               lost = false;
+               break;
+            }
+         } else if (j === 0) {
+            if (board[i][j] === board[i][j + 1]) {
+               lost = false;
+               break;
+            }
+            if (i + 1 <= 2 && board[i][j] === board[i + 1][j]) {
+               lost = false;
+               break;
+            }
+            if (i - 1 >= 0 && board[i][j] === board[i - 1][j]) {
+               lost = false;
+               break;
+            }
+         } else if (i === 2) {
+            if (board[i][j] === board[i - 1][j]) {
+               lost = false;
+               break;
+            }
+            if (j + 1 <= 2 && board[i][j] === board[i][j + 1]) {
+               lost = false;
+               break;
+            }
+            if (j - 1 >= 0 && board[i][j] === board[i][j - 1]) {
+               lost = false;
+               break;
+            }
+         } else if (j === 2) {
+            if (board[i][j] === board[i][j - 1]) {
+               lost = false;
+               break;
+            }
+            if (i + 1 <= 2 && board[i][j] === board[i + 1][j]) {
+               lost = false;
+               break;
+            }
+            if (i - 1 >= 0 && board[i][j] === board[i - 1][j]) {
+               lost = false;
+               break;
+            }
+         }
+
+         if (!lost) {
+            break;
+         }
+      }
+      if (!lost) {
+         break;
+      }
+   }
+   if (lost) {
+      state.status = "LOST";
+   }
+};
+
+const continuePlayingGame = () => {
+   updateWinningContainerDisplay("none");
+   state.status = "CONTINUING";
+};
+
 const mergeTiles = (event) => {
    const { board } = state;
-   switch (event.keyCode) {
-      case 37:
+   const keyCode = event.keyCode;
+   let updateGameState = false;
+   if (state.status === "PLAYING" || state.status === "CONTINUING") {
+      if (keyCode === 37) {
          mergeLeft(board);
-         addANewTile(board);
-         updateUI();
-         break;
-      case 38:
+         updateGameState = true;
+      } else if (keyCode === 38) {
          mergeTop(board);
-         addANewTile(board);
-         updateUI();
-         break;
-      case 39:
+         updateGameState = true;
+      } else if (keyCode === 39) {
          mergeRight(board);
-         addANewTile(board);
-         updateUI();
-         break;
-      case 40:
+         updateGameState = true;
+      } else if (keyCode === 40) {
          mergeBottom(board);
+         updateGameState = true;
+      }
+      if (updateGameState) {
+         if (state.status === "PLAYING") {
+            checkForWinningCondition(board);
+         }
          addANewTile(board);
+         checkForLosingCondition(board);
          updateUI();
-         break;
-      default:
-         break;
+      }
    }
 };
 
@@ -265,11 +382,20 @@ const addEvents = () => {
    window.addEventListener("keydown", mergeTiles);
 
    const newGameButton = qs("#newGameButton");
+   const winningNewGameButton = qs("#winningNewGameButton");
+   const winningContinueButton = qs("#winningContinueButton");
+   const tryAgainButton = qs("#tryAgainButton");
+
    newGameButton.addEventListener("click", startGame);
+   winningNewGameButton.addEventListener("click", startGame);
+   winningContinueButton.addEventListener("click", continuePlayingGame);
+   tryAgainButton.addEventListener("click", startGame);
 };
 
 const startGame = () => {
    initState();
+   updateWinningContainerDisplay("none");
+   updateLosingContainerDisplay("none");
    addEvents();
    addInitialTiles();
    updateUI();

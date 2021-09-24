@@ -34,7 +34,37 @@
             </div>
 
             <!-- game board -->
-            <div class="game-board" id="gameBoard"></div>
+            <div class="game-area">
+               <div class="game-board" id="gameBoard"></div>
+               <div class="winning-container" id="winningContainer">
+                  <p class="winning-text">
+                     Congratulations! You have completed the game.
+                  </p>
+                  <div class="winning-buttons-container">
+                     <button
+                        class="game-over-button continue-button"
+                        id="winningContinueButton"
+                     >
+                        Continue
+                     </button>
+                     <button
+                        class="game-over-button winning-new-game-button"
+                        id="winningNewGameButton"
+                     >
+                        New Game
+                     </button>
+                  </div>
+               </div>
+               <div class="losing-container" id="losingContainer">
+                  <p class="losing-text">You lost!</p>
+                  <button
+                     class="game-over-button try-again-button"
+                     id="tryAgainButton"
+                  >
+                     Try Again
+                  </button>
+               </div>
+            </div>
          </div>
       </div>
 
