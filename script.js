@@ -307,6 +307,7 @@ const checkForWinningCondition = (board) => {
    }
    if (won) {
       state.status = gameStatus.won;
+      updateBestScore();
    }
 };
 
