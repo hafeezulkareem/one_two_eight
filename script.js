@@ -1,3 +1,10 @@
+const gameStatus = {
+   playing: "PLAYING",
+   continuing: "CONTINUING",
+   won: "WON",
+   lost: "LOST",
+};
+
 const qs = (selector) => document.querySelector(selector);
 
 const qsa = (selector) => document.querySelectorAll(selector);
@@ -11,7 +18,7 @@ let state;
 
 const initState = () => {
    state = {
-      status: "PLAYING",
+      status: gameStatus.playing,
       board: [
          [null, null, null],
          [null, null, null],
@@ -119,11 +126,11 @@ const updateUI = () => {
 
    updateCurrentScore();
 
-   if (state.status === "WON") {
+   if (state.status === gameStatus.won) {
       updateWinningContainerDisplay("flex");
    }
 
-   if (state.status === "LOST") {
+   if (state.status === gameStatus.lost) {
       updateLosingContainerDisplay("flex");
    }
 };
@@ -284,7 +291,7 @@ const checkForWinningCondition = (board) => {
       }
    }
    if (won) {
-      state.status = "WON";
+      state.status = gameStatus.won;
    }
 };
 
@@ -359,21 +366,24 @@ const checkForLosingCondition = (board) => {
       }
    }
    if (lost) {
-      state.status = "LOST";
+      state.status = gameStatus.lost;
       updateBestScore();
    }
 };
 
 const continuePlayingGame = () => {
    updateWinningContainerDisplay("none");
-   state.status = "CONTINUING";
+   state.status = gameStatus.continuing;
 };
 
 const mergeTiles = (event) => {
    const { board } = state;
    const keyCode = event.keyCode;
    let updateGameState = false;
-   if (state.status === "PLAYING" || state.status === "CONTINUING") {
+   if (
+      state.status === gameStatus.playing ||
+      state.status === gameStatus.continuing
+   ) {
       if (keyCode === 37) {
          mergeLeft(board);
          updateGameState = true;
@@ -388,7 +398,7 @@ const mergeTiles = (event) => {
          updateGameState = true;
       }
       if (updateGameState) {
-         if (state.status === "PLAYING") {
+         if (state.status === gameStatus.playing) {
             checkForWinningCondition(board);
          }
          addANewTile(board);
